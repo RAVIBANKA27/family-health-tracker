@@ -22,23 +22,36 @@ app.use((err, req, res, next) => {
 // ── Init DB first, then register routes and start listening ──────────────────
 (async () => {
   try {
-    const db = await initDB();
+    console.log("STEP 1 - Starting app");
 
-    // Make db available to all routes via app.locals
+    const db = await initDB();
+    console.log("STEP 2 - DB initialized");
+
     app.locals.db = db;
 
-    app.use('/api/auth',    require('./routes/auth'));
-    app.use('/api/members', require('./routes/members'));
-    app.use('/api/reports', require('./routes/reports'));
-    app.use('/api/db',      require('./routes/dbadmin'));
-    app.use('/api/shares',  require('./routes/shares'));
+    console.log("Loading auth routes...");
+    app.use('/api/auth', require('./routes/auth'));
 
-    app.listen(PORT, () => {
-      console.log(`\n🏥 Family Health Tracker API  →  http://localhost:${PORT}`);
-      console.log(`📊 Health check               →  http://localhost:${PORT}/api/health\n`);
+    console.log("Loading members routes...");
+    app.use('/api/members', require('./routes/members'));
+
+    console.log("Loading reports routes...");
+    app.use('/api/reports', require('./routes/reports'));
+
+    console.log("Loading dbadmin routes...");
+    app.use('/api/db', require('./routes/dbadmin'));
+
+    console.log("Loading shares routes...");
+    app.use('/api/shares', require('./routes/shares'));
+
+    console.log("STEP 3 - All routes loaded");
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`STEP 4 - Server listening on ${PORT}`);
     });
+
   } catch (err) {
-    console.error('❌ Failed to initialise database:', err);
+    console.error("STARTUP ERROR:", err);
     process.exit(1);
   }
 })();
