@@ -1,4 +1,6 @@
-const BASE = '/api';
+const BASE =
+  import.meta.env.VITE_API_URL ||
+  'https://family-health-tracker-production-dff9.up.railway.app/api';
 
 function getToken() {
   return localStorage.getItem('health_token');
@@ -49,5 +51,6 @@ export const api = {
   createShare: (body) => request('/shares', { method: 'POST', body: JSON.stringify(body) }),
   getShares: () => request('/shares'),
   deleteShare: (id) => request(`/shares/${id}`, { method: 'DELETE' }),
-  getSharedReport: (token) => fetch(`/api/shares/view/${token}`).then(r => r.json()),
+  getSharedReport: (token) =>
+  fetch(`${BASE}/shares/view/${token}`).then(r => r.json()),
 };
